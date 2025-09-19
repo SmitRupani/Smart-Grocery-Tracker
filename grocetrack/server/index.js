@@ -1,7 +1,10 @@
 import express from 'express';
-import cors from 'cors';
+import dotenv from 'dotenv';
 
-import connectDB from './config/dbConnection';
+import connectDB from './config/dbConnection.js';
+
+import authRouter from "./routes/auth.routes.js"
+import groceryRouter from './routes/grocery.routes.js'
 
 const app = express();
 
@@ -12,6 +15,8 @@ connectDB();
 
 // Middleware
 app.use(express.json());
+app.use('/api/auth',authRouter);
+app.use('/api/groceries',groceryRouter);
 
 
 //Start the server
