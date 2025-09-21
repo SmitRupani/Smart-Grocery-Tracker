@@ -2,9 +2,7 @@ import jwt from "jsonwebtoken";
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
-    httpOnly: true,
-    sameSite: true,
-    expiresIn: "30d",
+    expiresIn: "7d", // 1 week
   });
 };
 
