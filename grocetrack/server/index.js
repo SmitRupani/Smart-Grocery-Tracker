@@ -25,7 +25,7 @@ app.use(cors({
 
 //routes
 app.use('/api/auth',authRouter);
-app.use('/api/groceries',groceryRouter);
+app.use('/api/grocery',groceryRouter);
 
 
 //Start the server

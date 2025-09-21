@@ -1,7 +1,7 @@
 import Grocery from "../models/grocery.model.js";
 
 // @desc    Get all groceries for logged-in user
-// @route   GET /api/groceries
+// @route   GET /api/grocery
 export const getGroceries = async (req, res) => {
   try {
     const groceries = await Grocery.find({ user: req.user._id });
@@ -12,7 +12,7 @@ export const getGroceries = async (req, res) => {
 };
 
 // @desc    Add new grocery
-// @route   POST /api/groceries
+// @route   POST /api/grocery
 export const createGrocery = async (req, res) => {
   const { name, category, quantity, unit, expiryDate } = req.body;
 
@@ -33,7 +33,7 @@ export const createGrocery = async (req, res) => {
 };
 
 // @desc    Update grocery
-// @route   PUT /api/groceries/:id
+// @route   PUT /api/grocery/:id
 export const updateGrocery = async (req, res) => {
   try {
     const grocery = await Grocery.findById(req.params.id);
@@ -59,7 +59,7 @@ export const updateGrocery = async (req, res) => {
 };
 
 // @desc    Delete grocery
-// @route   DELETE /api/groceries/:id
+// @route   DELETE /api/grocery/:id
 export const deleteGrocery = async (req, res) => {
   try {
     const grocery = await Grocery.findById(req.params.id);

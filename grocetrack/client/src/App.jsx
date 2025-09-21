@@ -10,6 +10,7 @@ import Dashboard from "./pages/Dashboard.jsx";
 import Logout from "./pages/Logout.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import AuthRoute from "./components/AuthRoute.jsx";
+import Grocery from "./pages/Grocery.jsx";
 
 function App() {
   const dispatch = useDispatch();
@@ -44,6 +45,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/grocery"
+            element={
+              <ProtectedRoute>
+                <Grocery />
               </ProtectedRoute>
             }
           />

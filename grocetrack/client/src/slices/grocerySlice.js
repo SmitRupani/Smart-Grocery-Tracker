@@ -1,29 +1,57 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import API from "../api/axios";
 
-export const fetchGroceries = createAsyncThunk("groceries/fetchGroceries", async () => {
-  const res = await API.get("/groceries");
+// Fetch groceries
+export const fetchGroceries = createAsyncThunk("grocery/fetchGroceries", async () => {
+  const res = await API.get("/grocery");
   return res.data;
 });
 
-export const addGrocery = createAsyncThunk("groceries/addGrocery", async (item) => {
-  const res = await API.post("/groceries", item);
+// Add grocery
+export const addGrocery = createAsyncThunk("grocery/addGrocery", async (item) => {
+  // item should include: name, category, quantity, unit, expiryDate
+  const res = await API.post("/grocery", item);
   return res.data;
 });
 
-export const deleteGrocery = createAsyncThunk("groceries/deleteGrocery", async (id) => {
-  await API.delete(`/groceries/${id}`);
+// Update grocery
+export const updateGrocery = createAsyncThunk("grocery/updateGrocery", async ({ id, data }) => {
+  const res = await API.put(`/grocery/${id}`, data);
+  return res.data;
+});
+
+// Delete grocery
+export const deleteGrocery = createAsyncThunk("grocery/deleteGrocery", async (id) => {
+  await API.delete(`/grocery/${id}`);
   return id;
 });
 
 const grocerySlice = createSlice({
-  name: "groceries",
+  name: "grocery",
   initialState: { items: [], loading: false, error: null },
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchGroceries.fulfilled, (state, action) => { state.items = action.payload; })
-      .addCase(addGrocery.fulfilled, (state, action) => { state.items.push(action.payload); })
+      // Fetch
+      .addCase(fetchGroceries.pending, (state) => { state.loading = true; })
+      .addCase(fetchGroceries.fulfilled, (state, action) => {
+        state.loading = false;
+        state.items = action.payload;
+      })
+      .addCase(fetchGroceries.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      // Add
+      .addCase(addGrocery.fulfilled, (state, action) => {
+        state.items.push(action.payload);
+      })
+      // Update
+      .addCase(updateGrocery.fulfilled, (state, action) => {
+        const idx = state.items.findIndex((item) => item._id === action.payload._id);
+        if (idx !== -1) state.items[idx] = action.payload;
+      })
+      // Delete
       .addCase(deleteGrocery.fulfilled, (state, action) => {
         state.items = state.items.filter((item) => item._id !== action.payload);
       });
