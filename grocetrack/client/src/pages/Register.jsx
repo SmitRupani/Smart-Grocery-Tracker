@@ -1,21 +1,29 @@
-import { useState } from "react";
-import { useAuth } from "../context/authContext.jsx";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { registerUser } from "../slices/authSlice";
 import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { register } = useAuth();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { user } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (user) {
+      navigate("/dashboard");
+    }
+  }, [user, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await register({ name, email, password });
+      await dispatch(registerUser({ name, email, password })).unwrap();
       navigate("/dashboard");
     } catch (err) {
-      alert(err.response?.data?.message || "Registration failed");
+      alert(err?.message || "Registration failed");
     }
   };
 
