@@ -8,22 +8,38 @@ export const fetchUser = createAsyncThunk("auth/fetchUser", async () => {
 });
 
 // Login
-export const loginUser = createAsyncThunk("auth/loginUser", async (credentials) => {
-  const res = await API.post("/auth/login", credentials);
-  return res.data;
-});
+export const loginUser = createAsyncThunk(
+  "auth/loginUser",
+  async (credentials) => {
+    const res = await API.post("/auth/login", credentials);
+    return res.data;
+  }
+);
 
 // Register
-export const registerUser = createAsyncThunk("auth/registerUser", async (userData) => {
-  const res = await API.post("/auth/register", userData);
-  return res.data;
-});
+export const registerUser = createAsyncThunk(
+  "auth/registerUser",
+  async (userData) => {
+    const res = await API.post("/auth/register", userData);
+    return res.data;
+  }
+);
 
 // Logout
 export const logoutUser = createAsyncThunk("auth/logoutUser", async () => {
   await API.post("/auth/logout");
   return null;
 });
+
+export const updateProfile = createAsyncThunk(
+  "auth/updateProfile",
+  async (userData) => {
+    const res = await API.put("/user/profile", userData, {
+      withCredentials: true,
+    });
+    return res.data;
+  }
+);
 
 const authSlice = createSlice({
   name: "auth",
@@ -32,7 +48,9 @@ const authSlice = createSlice({
   extraReducers: (builder) => {
     builder
       // Fetch user
-      .addCase(fetchUser.pending, (state) => { state.loading = true; })
+      .addCase(fetchUser.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(fetchUser.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload;
@@ -42,11 +60,24 @@ const authSlice = createSlice({
         state.user = null;
       })
       // Login
-      .addCase(loginUser.fulfilled, (state, action) => { state.user = action.payload; })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.user = action.payload;
+      })
       // Register
-      .addCase(registerUser.fulfilled, (state, action) => { state.user = action.payload; })
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.user = action.payload;
+      })
       // Logout
-      .addCase(logoutUser.fulfilled, (state) => { state.user = null; });
+      .addCase(logoutUser.fulfilled, (state) => {
+        state.user = null;
+      })
+      // Update Profile
+      .addCase(updateProfile.fulfilled, (state, action) => {
+        state.user = action.payload;
+      })
+      .addCase(updateProfile.rejected, (state, action) => {
+        state.error = action.error.message;
+      });
   },
 });
 

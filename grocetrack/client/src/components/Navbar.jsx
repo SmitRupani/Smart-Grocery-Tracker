@@ -19,6 +19,9 @@ const Navbar = () => {
             <Link to="/grocery" className="mr-4 hover:underline">
               Grocery
             </Link>
+            <Link to="/settings" className="mr-4 hover:underline">
+              Settings
+            </Link>
             <Link
               to="/logout"
               className="bg-red-500 px-3 py-1 rounded hover:bg-red-600"
