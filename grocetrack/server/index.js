@@ -8,6 +8,7 @@ import connectDB from './config/dbConnection.js';
 import authRouter from "./routes/auth.routes.js"
 import groceryRouter from './routes/grocery.routes.js'
 import UserRouter from './routes/user.routes.js';
+import RecipeRouter from './routes/recipe.routes.js';
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use(cors({
 app.use('/api/auth',authRouter);
 app.use('/api/grocery',groceryRouter);
 app.use('/api/user',UserRouter);
+app.use('/api/recipes', RecipeRouter);
 
 
 //Start the server

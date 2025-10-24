@@ -3,10 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateProfile } from "../slices/authSlice.js";
 import toast, { Toaster } from "react-hot-toast";
 
-
 const Settings = () => {
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
+  const { user, updateProfileLoading } = useSelector((state) => state.auth);
 
   const [formData, setFormData] = useState({
     name: user?.name || "",
@@ -19,12 +18,14 @@ const Settings = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(updateProfile(formData))
-    .unwrap()
-    .then(() => toast.success("Profile updated successfully"))
-    .catch(() => toast.error("Failed to update profile"));
+    try {
+      await dispatch(updateProfile(formData)).unwrap();
+      toast.success("Profile updated successfully 🎉");
+    } catch (err) {
+      toast.error(err || "Failed to update profile ❌");
+    }
   };
 
   return (
@@ -61,6 +62,7 @@ const Settings = () => {
             value={formData.currentPassword}
             onChange={handleChange}
             className="w-full border p-2 rounded"
+            autoComplete="off"
           />
         </div>
         <div>
@@ -72,14 +74,18 @@ const Settings = () => {
             value={formData.newPassword}
             onChange={handleChange}
             className="w-full border p-2 rounded"
+            autoComplete="off"
           />
         </div>
 
         <button
           type="submit"
-          className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600"
+          disabled={updateProfileLoading}
+          className={`w-full py-2 rounded text-white ${
+            updateProfileLoading ? "bg-gray-400 cursor-not-allowed" : "bg-green-500 hover:bg-green-600"
+          }`}
         >
-          Save Changes
+          {updateProfileLoading ? "Updating..." : "Save Changes"}
         </button>
       </form>
     </div>

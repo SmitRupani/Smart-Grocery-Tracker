@@ -43,7 +43,13 @@ export const updateProfile = createAsyncThunk(
 
 const authSlice = createSlice({
   name: "auth",
-  initialState: { user: null, loading: false, error: null },
+  initialState: {
+    user: null,
+    loginLoading: false,
+    fetchUserLoading: false,
+    updateProfileLoading: false,
+    error: null,
+  },
   reducers: {},
   extraReducers: (builder) => {
     builder
@@ -63,19 +69,32 @@ const authSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.user = action.payload;
       })
+      .addCase(loginUser.rejected, (state, action) => {
+        state.loginLoading = false;
+        state.error = action.error.message;
+      })
       // Register
       .addCase(registerUser.fulfilled, (state, action) => {
         state.user = action.payload;
+      })
+      .addCase(registerUser.rejected, (state, action) => {
+        state.loginLoading = false;
+        state.error = action.error.message;
       })
       // Logout
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;
       })
-      // Update Profile
+    // Update Profile
+      .addCase(updateProfile.pending, (state) => {
+        state.updateProfileLoading = true;
+      })
       .addCase(updateProfile.fulfilled, (state, action) => {
+        state.updateProfileLoading = false;
         state.user = action.payload;
       })
       .addCase(updateProfile.rejected, (state, action) => {
+        state.updateProfileLoading = false;
         state.error = action.error.message;
       });
   },

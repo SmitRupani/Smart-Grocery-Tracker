@@ -22,6 +22,9 @@ const Navbar = () => {
             <Link to="/settings" className="mr-4 hover:underline">
               Settings
             </Link>
+            <Link to="/recipes" className="mr-4 hover:underline">
+              Recipes
+            </Link>
             <Link
               to="/logout"
               className="bg-red-500 px-3 py-1 rounded hover:bg-red-600"
