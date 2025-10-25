@@ -2,6 +2,14 @@ import User from "../models/user.model.js";
 import generateToken from "../utils/generateToken.js";
 import bcrypt from "bcrypt";
 
+// Helper to handle cookie options based on environment
+const cookieOptions = {
+  httpOnly: true,
+  secure: true, // ✅ required for HTTPS (Vercel + Render)
+  sameSite: "None", // ✅ allows cross-site cookies
+  maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
+};
+
 // @desc Register new user
 export const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
@@ -21,12 +29,7 @@ export const registerUser = async (req, res) => {
     if (user) {
       const token = generateToken(user._id);
 
-      res.cookie("token", token, {
-        httpOnly: true,
-        // secure: process.env.NODE_ENV === "production",
-        sameSite: "none",
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
-      });
+      res.cookie("token", token, cookieOptions);
 
       res.status(201).json({
         _id: user.id,
@@ -51,12 +54,7 @@ export const loginUser = async (req, res) => {
     if (user && (await bcrypt.compare(password, user.password))) {
       const token = generateToken(user._id);
 
-      res.cookie("token", token, {
-        httpOnly: true,
-        // secure: process.env.NODE_ENV === "production",
-        sameSite: "none",
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-      });
+      res.cookie("token", token, cookieOptions);
 
       res.json({
         _id: user.id,
@@ -73,7 +71,10 @@ export const loginUser = async (req, res) => {
 
 // @desc Get current user
 export const getCurrentUser = async (req, res) => {
-  if (!req.user) return res.status(401).json({ message: "Not authorized" });
+  if (!req.user) {
+    return res.status(401).json({ message: "Not authorized" });
+  }
+
   res.json({
     _id: req.user.id,
     name: req.user.name,
@@ -85,8 +86,9 @@ export const getCurrentUser = async (req, res) => {
 export const logoutUser = async (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
-    // secure: process.env.NODE_ENV === "production",
-    sameSite: "none",
+    secure: true,
+    sameSite: "None",
   });
+
   res.json({ message: "Logged out successfully" });
 };
