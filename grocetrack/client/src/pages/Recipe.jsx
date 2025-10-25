@@ -275,7 +275,7 @@ const Recipes = () => {
         ))}
       </div>
 
-      {/* 🧾 View Details Modal */}
+      {/* 🧾 View Details Modal (for Spoonacular API recipes) */}
       {selected && selected.id && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-11/12 md:w-2/3 lg:w-1/2 shadow-lg overflow-y-auto max-h-[80vh]">
@@ -289,8 +289,8 @@ const Recipes = () => {
             <h4 className="font-semibold mb-2">Ingredients:</h4>
             <ul className="list-disc list-inside mb-4">
               {[
-                ...(selected.usedIngredients || []),
-                ...(selected.missedIngredients || []),
+                ...(selected?.usedIngredients || []),
+                ...(selected?.missedIngredients || []),
               ].map((i) => (
                 <li key={i.id}>{i.name}</li>
               ))}
@@ -313,11 +313,12 @@ const Recipes = () => {
         </div>
       )}
 
-      {/* Modal for Editing */}
-      {selected && (
+      {/* 📝 Edit Modal (for saved recipes) */}
+      {selected && selected._id && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 md:w-2/3 lg:w-1/2">
             <h3 className="text-xl font-bold mb-2">Edit Recipe</h3>
+
             <input
               type="text"
               value={selected.title}
@@ -326,8 +327,9 @@ const Recipes = () => {
               }
               className="w-full border p-2 rounded mb-2"
             />
+
             <textarea
-              value={selected.ingredients.map((i) => i.name).join(", ")}
+              value={selected?.ingredients?.map((i) => i.name).join(", ") || ""}
               onChange={(e) =>
                 setSelected({
                   ...selected,
@@ -338,13 +340,15 @@ const Recipes = () => {
               }
               className="w-full border p-2 rounded mb-2"
             />
+
             <textarea
-              value={selected.instructions}
+              value={selected.instructions || ""}
               onChange={(e) =>
                 setSelected({ ...selected, instructions: e.target.value })
               }
               className="w-full border p-2 rounded mb-2"
             />
+
             <input
               type="text"
               value={selected.imageUrl || ""}
@@ -353,6 +357,7 @@ const Recipes = () => {
               }
               className="w-full border p-2 rounded mb-2"
             />
+
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setSelected(null)}
