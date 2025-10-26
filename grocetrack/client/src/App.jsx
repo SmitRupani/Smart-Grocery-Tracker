@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { fetchUser } from "./slices/authSlice.js";
 
 import Navbar from "./components/Navbar.jsx";
+import LandingPage from "./pages/Landing.jsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
@@ -26,6 +27,14 @@ function App() {
       <div className="min-h-screen bg-gray-50">
         <Navbar />
         <Routes>
+          <Route
+            path="/"
+            element={
+              // <AuthRoute>
+                <LandingPage />
+              // </AuthRoute> 
+            }
+          />
           <Route
             path="/login"
             element={
@@ -62,7 +71,7 @@ function App() {
             path="/settings"
             element={
               <ProtectedRoute>
-                <Settings/>
+                <Settings />
               </ProtectedRoute>
             }
           />
