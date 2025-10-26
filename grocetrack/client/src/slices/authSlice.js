@@ -2,10 +2,20 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import API from "../api/axios";
 
 // Fetch logged-in user
-export const fetchUser = createAsyncThunk("auth/fetchUser", async () => {
-  const res = await API.get("/auth/me");
-  return res.data;
-});
+export const fetchUser = createAsyncThunk(
+  "auth/fetchUser",
+  async (_, thunkAPI) => {
+    try {
+      const res = await API.get("/auth/me");
+      return res.data; // ✅ success
+    } catch (error) {
+      // ⛔ Catch network / 401 / expired token errors
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Not authenticated"
+      );
+    }
+  }
+);
 
 // Login
 export const loginUser = createAsyncThunk(

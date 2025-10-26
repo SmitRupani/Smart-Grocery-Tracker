@@ -30,9 +30,9 @@ function App() {
           <Route
             path="/"
             element={
-              // <AuthRoute>
+              <AuthRoute>
                 <LandingPage />
-              // </AuthRoute> 
+               </AuthRoute> 
             }
           />
           <Route
