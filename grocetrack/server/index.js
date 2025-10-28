@@ -30,7 +30,7 @@ app.use('/api/auth',authRouter);
 app.use('/api/grocery',groceryRouter);
 app.use('/api/user',UserRouter);
 app.use('/api/recipes', RecipeRouter);
-app.use('/uptime', (req, res) => res.status(200).send('Ping server uptime check successful'));
+app.get('/uptime', (req, res) => res.status(200).send('Ping server uptime check successful'));
 
 
 //Start the server
